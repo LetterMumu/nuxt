@@ -1,40 +1,45 @@
 <template>
   <div>
-    <form class="card comment-form">
+    <form class="card comment-form" @submit.prevent="onCommitComment">
       <div class="card-block">
-        <textarea class="form-control" placeholder="Write a comment..." rows="3"></textarea>
+        <textarea 
+          class="form-control" 
+          placeholder="Write a comment..." 
+          rows="3"
+          v-model="comment"
+        ></textarea>
       </div>
       <div class="card-footer">
-        <img src="http://i.imgur.com/Qr71crq.jpg" class="comment-author-img" />
-        <button class="btn btn-sm btn-primary">Post Comment</button>
+        <img :src="user.image" class="comment-author-img" />
+        <button class="btn btn-sm btn-primary" :disabled="submitting">
+        Post Comment
+        </button>
       </div>
     </form>
-
+    
     <div class="card" v-for="comment in comments" :key="comment.id">
       <div class="card-block">
-        <p class="card-text">{{ comment.body }}</p>
+        <p class="card-text">{{ comment.body }}.</p>
       </div>
       <div class="card-footer">
-        <nuxt-link
-          class="comment-author"
-          :to="{
+        <nuxt-link class="comment-author" :to="{
           name: 'profile',
           params: {
             username: comment.author.username
           }
-        }"
-        >
+        }">
           <img :src="comment.author.image" class="comment-author-img" />
-        </nuxt-link>&nbsp;
-        <nuxt-link
-          class="comment-author"
-          :to="{
+        </nuxt-link>        
+        &nbsp;
+        <nuxt-link class="comment-author" :to="{
           name: 'profile',
           params: {
             username: comment.author.username
           }
-        }"
-        >{{ comment.author.username }}</nuxt-link>
+        }">
+          {{ comment.author.username }}
+        </nuxt-link>  
+        <a href="" class="comment-author">Jacob Schmidt</a>
         <span class="date-posted">{{ comment.createdAt | date('MMM DD, YYYY') }}</span>
       </div>
     </div>
@@ -42,26 +47,49 @@
 </template>
 
 <script>
-import { getComments } from "@/api/article";
-
+import { getComments, commitArticleComment } from '@/api/article';
+import { mapState } from 'vuex'
 export default {
-  name: "ArticleComments",
+  name: 'ArticleComments',
+  components: {},
   props: {
     article: {
       type: Object,
       required: true
     }
   },
-  data() {
+  data () {
     return {
-      comments: [] // 文章列表
-    };
+      comments: [],
+      comment: '',
+      submitting: false
+    }
   },
   async mounted() {
-    const { data } = await getComments(this.article.slug);
-    this.comments = data.comments;
+    const { data } = await getComments(this.article.slug)
+    this.comments = data.comments
+  },
+  computed: {
+    ...mapState(['user'])
+  },
+  methods: {
+    async onCommitComment() {
+      try {
+        this.submitting = true
+        const { data } = await commitArticleComment(this.article.slug, {
+          comment: {
+            body: this.comment
+          }
+        })
+        this.comments.unshift(data.comment)
+        this.submitting = false
+      } catch (error) {
+        console.dir(error)
+        this.submitting = false
+      }
+    }
   }
-};
+}
 </script>
 
 <style>

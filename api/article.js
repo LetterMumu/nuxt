@@ -15,12 +15,8 @@ export const getArticles = params => {
 export const getYourFeedArticles = params => {
   return request({
     method: 'GET',
-    url: '/api/articles/feed',
-    params,
-    // headers: {
-    //   // 添加用户身份，数据格式：Token空格Token数据
-    //   Authorization: `Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NDgxMTYsInVzZXJuYW1lIjoibHB6OTk5IiwiZXhwIjoxNTk3NzQxNTA4fQ.2yO8Fss4hYnvsIN2UYHsutQ1hmYqSSAA-UrIRnP4DOY`
-    // }
+    url: '/api/articles',
+    params
   })
 }
 
@@ -53,5 +49,38 @@ export const getComments = slug => {
   return request({
     method: 'GET',
     url: `/api/articles/${slug}/comments`
+  })
+}
+// 提交文章评论
+export const commitArticleComment = (slug, data) => {
+  return request({
+    method: 'POST',
+    url: `/api/articles/${slug}/comments`,
+    data
+  })
+}
+
+// 删除文章
+export const deleteArticle = slug => {
+  return request({
+    method: 'DELETE',
+    url: `/api/articles/${slug}`
+  })
+}
+
+// 发布文章
+export const createArticle = data => {
+  return request({
+    method: 'POST',
+    url: `/api/articles`,
+    data
+  })
+}
+// 修改文章
+export const updateArticle = (data, slug) => {
+  return request({
+    method: 'PUT',
+    url: `/api/articles/${slug}`,
+    data
   })
 }

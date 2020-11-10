@@ -1,8 +1,7 @@
-export default function ({
-  store,
-  redirect
-}) {
-  // If the user is authenticated redirect to home page
+/**
+ * 验证未登录的中间件
+ */
+export default function ({ store, redirect }) {
   if (store.state.user) {
     return redirect('/')
   }

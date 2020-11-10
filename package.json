@@ -13,11 +13,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "nuxt": "^2.14.7",
-    "axios": "^0.19.2",
+    "axios": "^0.20.0",
     "cookieparser": "^0.1.0",
-    "dayjs": "^1.8.28",
+    "dayjs": "^1.8.36",
     "js-cookie": "^2.2.1",
-    "markdown-it": "^11.0.0"
+    "markdown-it": "^11.0.1",
+    "nuxt": "^2.14.5"
   }
 }
